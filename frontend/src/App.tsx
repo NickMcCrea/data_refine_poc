@@ -1,24 +1,44 @@
 import React from 'react';
 import logo from './logo.svg';
+
+//import useState and useEffect hooks
+import { useState, useEffect } from 'react';
+
 import './App.css';
 import Header from './components/Header';
 import BasicTable from './components/BasicTable';
 import { DataRow } from './components/DataRow';
+import { RestClient } from './services/RestClient';
 
-//some data for the basic table, should be DataRows
-const data: DataRow[] = [
-  { header: 'Name', value: 'Jimmi Hendrix' },
-  { header: 'Email', value: 'jimmi@jobby.com' },
-  { header: 'Phone', value: '1234567890' },
-  { header: 'Address', value: '1234 Main St, Anytown, USA' }];
 
 
 function App() {
+
+  const [data, setData] = useState<DataRow[]>([]);
+  const restClient = new RestClient();
+
+  // Registering endpoints
+  restClient.registerEndpoint('test', { url: 'http://localhost:5001/test', method: 'GET' });
+
+
+  // Fetching data from the API
+  useEffect(() => {
+    restClient.makeRequest<DataRow[]>('test')
+      .then(data => setData(data))
+      .catch(error => console.error(error));
+  }, []);
+
+    
+
+
+
+
+
   return (
     <div className="App">
-    <Header />
-    <BasicTable data={data} />
-   </div>
+      <Header />
+      <BasicTable data={data} />
+    </div>
 
 
   );

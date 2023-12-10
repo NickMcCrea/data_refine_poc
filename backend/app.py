@@ -10,10 +10,21 @@ def home():
 
 @app.route('/test', methods=['GET'])
 def test_endpoint():
-    data = {
-        'message': 'Test endpoint reached successfully!',
-        'status': 'success'
-    }
+   
+    #return some table data, where it's a list of key value pairs, where key is the column name and value is the value
+    data = [
+        {
+            'id': 1,
+            'name': 'John Doe',
+            'age': 25
+        },
+        {
+            'id': 2,
+            'name': 'Jane Doe',
+            'age': 22
+        }
+    ]
+
     return jsonify(data)
 
 if __name__ == '__main__':

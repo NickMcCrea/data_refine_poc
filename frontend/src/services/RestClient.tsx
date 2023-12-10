@@ -7,7 +7,7 @@ interface EndpointConfig {
   method: Method;
 }
 
-export class RestService {
+export class RestClient {
   private endpoints: Map<string, EndpointConfig> = new Map();
 
   // Method to register an endpoint
