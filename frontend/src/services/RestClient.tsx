@@ -7,7 +7,7 @@ interface EndpointConfig {
   method: Method;
 }
 
-export class RestClient {
+class RestClient {
   private endpoints: Map<string, EndpointConfig> = new Map();
 
   // Method to register an endpoint
@@ -44,6 +44,8 @@ export class RestClient {
     }
   }
 }
+
+export default RestClient;
 
 //USAGE
 // // For a GET request

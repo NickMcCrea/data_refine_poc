@@ -8,7 +8,8 @@ import './App.css';
 import Header from './components/Header';
 import BasicTable from './components/BasicTable';
 import { DataRow } from './components/DataRow';
-import { RestClient } from './services/RestClient';
+import RestClient  from './services/RestClient';
+import SocketClient  from './services/SocketClient';
 
 
 
@@ -16,6 +17,7 @@ function App() {
 
   const [data, setData] = useState<DataRow[]>([]);
   const restClient = new RestClient();
+  const socketClient = new SocketClient('http://localhost:5001');
 
   // Registering endpoints
   restClient.registerEndpoint('test', { url: 'http://localhost:5001/test', method: 'GET' });
@@ -28,8 +30,14 @@ function App() {
       .catch(error => console.error(error));
   }, []);
 
-    
-
+  
+  // Connecting to the socket
+  useEffect(() => {
+    socketClient.subscribe('test', () => 
+    {
+        console.log("SocketClient: test message received");
+    });
+  }, []);
 
 
 
