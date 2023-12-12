@@ -12,7 +12,6 @@
   .header-placeholder {
     grid-area: header;
     background-color: blue;
-    text-align: center;
   }
   
   .main-panel-placeholder {
