@@ -6,7 +6,8 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { DataRow } from './DataRow';
+import { DataRow } from '../DataRow';
+import styles from './BasicTable.module.css';
 
 // Interface for the component props
 interface BasicTableProps {
@@ -19,11 +20,11 @@ const BasicTable: React.FC<BasicTableProps> = ({ data }) => {
 
   return (
     <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650, height: '100%' }} aria-label="simple table">
+      <Table>
         <TableHead>
           <TableRow>
             {headers.map((header) => (
-              <TableCell key={header} sx={{ fontWeight: 'bold', backgroundColor: '#C9E0F5' }}>
+              <TableCell key={header} className={styles.headerCell} sx={{fontWeight: 'bold'}}>
                 {header}
               </TableCell>
             ))}
@@ -32,12 +33,12 @@ const BasicTable: React.FC<BasicTableProps> = ({ data }) => {
         <TableBody>
           {data.map((row, rowIndex) => (
             <TableRow
-              key={rowIndex}
-              sx={{ '&:nth-of-type(odd)': { backgroundColor: 'rgba(0, 0, 0, 0.04)' } }}
-            >
-              {headers.map((header) => (
-                <TableCell key={header}>{row[header]}</TableCell>
-              ))}
+            key={rowIndex}
+            className={rowIndex % 2 === 0 ? '' : styles.rowOdd}
+          >
+            {headers.map((header) => (
+              <TableCell key={header}>{row[header]}</TableCell>
+            ))}
             </TableRow>
           ))}
         </TableBody>

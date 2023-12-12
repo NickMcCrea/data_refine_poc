@@ -3,13 +3,12 @@ import logo from './logo.svg';
 
 //import useState and useEffect hooks
 import { useState, useEffect } from 'react';
-
-import './App.css';
-import Header from './components/Header';
-import BasicTable from './components/BasicTable';
+import Header from './components/Header/Header';
+import BasicTable from './components/BasicTable/BasicTable';
 import { DataRow } from './components/DataRow';
 import RestClient  from './services/RestClient';
 import SocketClient  from './services/SocketClient';
+import './App.css';
 
 
 
@@ -43,10 +42,12 @@ function App() {
 
 
   return (
-    <div className="App">
-      <Header />
-      <BasicTable data={data} />
-    </div>
+    <div className="layout">
+    <div className="header-placeholder"><Header/></div>
+    <div className="main-panel-placeholder"><BasicTable data={data}/></div>
+    <div className="sidebar-placeholder">Sidebar</div>
+    <div className="footer-placeholder">Footer</div>
+  </div>
 
 
   );

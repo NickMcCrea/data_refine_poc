@@ -1,0 +1,10 @@
+
+
+.headerCell {
+    background-color: #94C5EB;
+    font-weight: bold;
+}
+
+.rowOdd {
+    background-color: rgba(0, 0, 0, 0.04);
+}
