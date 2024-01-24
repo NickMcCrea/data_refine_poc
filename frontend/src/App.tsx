@@ -8,6 +8,7 @@ import BasicTable from './components/BasicTable/BasicTable';
 import { DataRow } from './components/DataRow';
 import RestClient  from './services/RestClient';
 import SocketClient  from './services/SocketClient';
+import ChatInputWithSend from './components/ChatInput/ChatInputWithSend';
 import './App.css';
 
 
@@ -44,8 +45,13 @@ function App() {
   return (
     <div className="layout2">
     <div className="header-placeholder"><Header/></div>
-    <div className="main-panel-placeholder"><BasicTable data={data}/></div>
-    
+    <div className="main-panel-placeholder">
+
+    <ChatInputWithSend onSubmit={(value) => console.log(value)} />
+
+
+    </div>
+
     {/* <div className="sidebar-placeholder">Sidebar</div>
     <div className="footer-placeholder">Footer</div> */}
   </div>

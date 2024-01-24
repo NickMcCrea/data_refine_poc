@@ -1,0 +1,10 @@
+/* ChatInput.module.css */
+.container {
+    display: flex;
+    align-items: flex-end;
+  }
+  
+  .sendButton {
+    margin-bottom: 5px;
+  }
+  
