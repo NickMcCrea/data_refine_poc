@@ -9,7 +9,9 @@ import json
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
-socketio = SocketIO(app, cors_allowed_origins="*")
+socketio = SocketIO(app, cors_allowed_origins="*", logger=False, engineio_logger=False)
+
+
 
 user_sessions = {}
 
@@ -19,6 +21,9 @@ def on_connect():
     session_id = session.get("session_id", str(uuid4()))
     # Save the session_id back to the session to persist it
     session["session_id"] = session_id
+
+    print(f"Session {session_id} has connected.")
+    
     # Join the room with the session_id
     join_room(session_id)
     emit("connected", {"message": "Connected to WebSocket", "session_id": session_id})
@@ -61,7 +66,10 @@ def test_endpoint():
 
 @app.route('/submit_query', methods=['POST'])
 def submit_query():
+
+   
     session_id = session.get("session_id")
+    print("submit_query called for session id",session_id)
 
     # Retrieve the query from the request body
     data = request.json
@@ -89,7 +97,8 @@ def submit_query():
     user_sessions[session_id] = updated_query_state_json
 
     # Emit the updated query state to the client
-    socketio.emit("query_update", json.loads(updated_query_state_json), room=session_id)
+    socketio.emit("submit_query_udpate", json.loads(updated_query_state_json), room=session_id)
+    print("socketio roomid: ", session_id)
 
     # Return the updated query state
     return jsonify(json.loads(updated_query_state_json))
@@ -100,4 +109,4 @@ def submit_query():
 #method that is called on a loop every 5 seconds
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=5001)

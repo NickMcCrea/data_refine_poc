@@ -10,34 +10,50 @@ import RestClient  from './services/RestClient';
 import SocketClient  from './services/SocketClient';
 import ChatInputWithSend from './components/ChatInput/ChatInputWithSend';
 import './App.css';
+import { ConversationData } from './DataSetConversation';
 
 
 
 function App() {
 
-  const [data, setData] = useState<DataRow[]>([]);
+  const [conversationData, setConversationData] = useState<ConversationData | null>(null);
   const restClient = new RestClient();
   const socketClient = new SocketClient('http://localhost:5001');
 
   // Registering endpoints
-  restClient.registerEndpoint('test', { url: 'http://localhost:5001/test', method: 'GET' });
+  restClient.registerEndpoint('submit_query', { url: 'http://localhost:5001/submit_query', method: 'POST' });
 
-
-  // Fetching data from the API
-  useEffect(() => {
-    restClient.makeRequest<DataRow[]>('test')
-      .then(data => setData(data))
-      .catch(error => console.error(error));
-  }, []);
 
   
   // Connecting to the socket
   useEffect(() => {
-    socketClient.subscribe('test', () => 
+    socketClient.subscribe("submit_query_update", x => 
     {
-        console.log("SocketClient: test message received");
+        console.log('submit_query_update');
+         console.log(x);
     });
+
+    socketClient.subscribe("connected", x => {
+     
+      console.log(x);
+  });
+
   }, []);
+
+   // Function to handle chat input submission
+   const handleSubmit = (inputValue: string) => {
+
+    restClient.makeRequest<ConversationData>('submit_query', { input: inputValue })
+      .then(data => {
+        console.log(data);
+        setConversationData(data);
+    
+      })
+      .catch(error => {
+        
+        console.error(error);
+      });
+  };
 
 
 
@@ -47,7 +63,7 @@ function App() {
     <div className="header-placeholder"><Header/></div>
     <div className="main-panel-placeholder">
 
-    <ChatInputWithSend onSubmit={(value) => console.log(value)} />
+    <ChatInputWithSend onSubmit={handleSubmit} />
 
 
     </div>
