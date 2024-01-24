@@ -77,7 +77,7 @@ class QueryState:
 
         return current_state.to_json()
 
-#print(QueryState.get_test_json())
+print(QueryState.get_test_json())
 
 
  
