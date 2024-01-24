@@ -2,6 +2,8 @@ from flask import Flask, jsonify, request, session
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit, join_room, leave_room
 from uuid import uuid4
+from data_set_query import QueryState
+import json
 
 
 
@@ -56,6 +58,43 @@ def test_endpoint():
     socketio.emit("test", {}, room=session.get("session_id"))
 
     return jsonify(data)
+
+@app.route('/submit_query', methods=['POST'])
+def submit_query():
+    session_id = session.get("session_id")
+
+    # Retrieve the query from the request body
+    data = request.json
+    input_query = data.get('input')
+
+    # Check if there's an existing QueryState for this session
+    if session_id in user_sessions:
+        # Retrieve the existing QueryState and update it
+        query_state_json = user_sessions[session_id]
+        query_state = QueryState.from_json(query_state_json)
+       
+        query_state.add_user_message(input_query)
+    else:
+        # Initialize a new QueryState for the first query
+        query_state = QueryState(input_query)
+       
+
+    # Update the user_sessions with the new state
+    user_sessions[session_id] = query_state.to_json()
+
+    # Simulate the classification of the query
+    updated_query_state_json = QueryState.simulate_next_classification(query_state.to_json())
+
+    # Update the session with the new state
+    user_sessions[session_id] = updated_query_state_json
+
+    # Emit the updated query state to the client
+    socketio.emit("query_update", json.loads(updated_query_state_json), room=session_id)
+
+    # Return the updated query state
+    return jsonify(json.loads(updated_query_state_json))
+
+
 
 
 #method that is called on a loop every 5 seconds

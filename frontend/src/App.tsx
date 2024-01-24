@@ -42,11 +42,12 @@ function App() {
 
 
   return (
-    <div className="layout">
+    <div className="layout2">
     <div className="header-placeholder"><Header/></div>
     <div className="main-panel-placeholder"><BasicTable data={data}/></div>
-    <div className="sidebar-placeholder">Sidebar</div>
-    <div className="footer-placeholder">Footer</div>
+    
+    {/* <div className="sidebar-placeholder">Sidebar</div>
+    <div className="footer-placeholder">Footer</div> */}
   </div>
 
 

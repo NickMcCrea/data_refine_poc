@@ -8,6 +8,16 @@
     grid-template-rows: auto 15fr 1fr;
     height: 100vh;
   }
+
+  .layout2 {
+    display: grid;
+    grid-template-areas:
+      'header'
+      'main';
+    grid-template-columns: auto;
+    grid-template-rows: 1fr 15fr;
+    height: 100vh;
+  }
   
   .header-placeholder {
     grid-area: header;
