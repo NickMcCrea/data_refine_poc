@@ -4,12 +4,18 @@ from flask_socketio import SocketIO, emit, join_room, leave_room
 from uuid import uuid4
 from data_set_query import QueryState
 import json
+import logging
 
 
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
+CORS(app, supports_credentials=True)
 socketio = SocketIO(app, cors_allowed_origins="*", logger=False, engineio_logger=False)
+
+logging.getLogger('socketio').setLevel(logging.ERROR)
+logging.getLogger('engineio').setLevel(logging.ERROR)
+# Set Werkzeug log level
+logging.getLogger('werkzeug').setLevel(logging.ERROR)
 
 
 
@@ -68,12 +74,14 @@ def test_endpoint():
 def submit_query():
 
    
-    session_id = session.get("session_id")
-    print("submit_query called for session id",session_id)
+    #session_id = session.get("session_id")
+    #print("submit_query called for session id",session_id)
 
     # Retrieve the query from the request body
     data = request.json
     input_query = data.get('input')
+    session_id = data.get('session_id')
+    print("session id: ", session_id)
 
     # Check if there's an existing QueryState for this session
     if session_id in user_sessions:
@@ -97,7 +105,8 @@ def submit_query():
     user_sessions[session_id] = updated_query_state_json
 
     # Emit the updated query state to the client
-    socketio.emit("submit_query_udpate", json.loads(updated_query_state_json), room=session_id)
+  
+    socketio.emit("submit_query_update", json.loads(updated_query_state_json), room=session_id)
     print("socketio roomid: ", session_id)
 
     # Return the updated query state
@@ -106,7 +115,6 @@ def submit_query():
 
 
 
-#method that is called on a loop every 5 seconds
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5001)
+    socketio.run(app, debug=False, port=5001)

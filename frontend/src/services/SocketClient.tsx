@@ -16,6 +16,7 @@ class SocketClient extends EventEmitter {
     // Generic event listener that re-emits all received events
     this.socket.onAny((event, ...args) => {
       this.emit(event, ...args);
+      //console.log(event, args);
     });
   };
 

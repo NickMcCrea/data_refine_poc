@@ -16,6 +16,9 @@ import { ConversationData } from './DataSetConversation';
 
 function App() {
 
+  //state to hold our websocket session_id
+  const [sessionId, setSessionId] = useState<string | null>(null);
+
   const [conversationData, setConversationData] = useState<ConversationData | null>(null);
   const restClient = new RestClient();
   const socketClient = new SocketClient('http://localhost:5001');
@@ -30,12 +33,19 @@ function App() {
     socketClient.subscribe("submit_query_update", x => 
     {
         console.log('submit_query_update');
-         console.log(x);
+        console.log(x);
     });
 
     socketClient.subscribe("connected", x => {
-     
-      console.log(x);
+
+      //capture the session_id from the JSON object
+      const sessionId = x.session_id;
+      //log it
+      console.log("Connected, now setting session id")
+      console.log(sessionId);
+
+      //store it
+      setSessionId(sessionId);
   });
 
   }, []);
@@ -43,7 +53,16 @@ function App() {
    // Function to handle chat input submission
    const handleSubmit = (inputValue: string) => {
 
-    restClient.makeRequest<ConversationData>('submit_query', { input: inputValue })
+    //createa JSON to send
+    const json = {
+      input: inputValue,
+      session_id: sessionId
+    };
+
+    //log it
+    console.log(json);
+
+    restClient.makeRequest<ConversationData>('submit_query', json)
       .then(data => {
         console.log(data);
         setConversationData(data);
