@@ -5,12 +5,19 @@ from uuid import uuid4
 from data_set_query import QueryState
 import json
 import logging
+import llm_wrapper
+import os
+import openai
+from dotenv import load_dotenv
 
+load_dotenv()
 
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 socketio = SocketIO(app, cors_allowed_origins="*", logger=False, engineio_logger=False)
+
+openai.api_key = os.getenv("OPENAI_KEY")
 
 logging.getLogger('socketio').setLevel(logging.ERROR)
 logging.getLogger('engineio').setLevel(logging.ERROR)
@@ -104,7 +111,17 @@ def submit_query():
     return jsonify(json.loads(updated_query_state_json))
 
 
+@app.route('/simple_chat', methods=['POST'])
+def simple_chat():
+    data = request.json
+    input_query = data.get('input')
+    session_id = data.get('session_id')
+    print("session id: ", session_id)
 
+    messages = llm_wrapper.build_basic_message_list(input_query)
+    response = llm_wrapper.llm_call(messages)
+    print("response: ", response)
+    return jsonify({"reply": response})
 
 
 if __name__ == '__main__':

@@ -12,7 +12,7 @@ type AIChatBoxProps = {
 
 const AIChatBox: React.FC<AIChatBoxProps> = ({ messages, handleSendMessage }) => {
   return (
-    <Box style={{ padding: '20px', height: '80vh' }}>
+    <Box style={{ padding: '20px', height: '100vh' }}>
     <InputWithSendButton onSubmit={handleSendMessage} />
       <ChatHistory messages={messages} />
     </Box>

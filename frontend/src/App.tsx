@@ -30,6 +30,7 @@ function App() {
   // Registering endpoints
   restClient.registerEndpoint('submit_query', { url: 'http://localhost:5001/submit_query', method: 'POST' });
   restClient.registerEndpoint('test', { url: 'http://localhost:5001/test', method: 'POST' });
+  restClient.registerEndpoint('simple_chat', { url: 'http://localhost:5001/simple_chat', method: 'POST' });
 
   // Connecting to the socket
   useEffect(() => {
@@ -66,7 +67,7 @@ function App() {
     //log it
     console.log(json);
 
-    restClient.makeRequest<TestMessage>('test', json)
+    restClient.makeRequest<TestMessage>('simple_chat', json)
       .then(data => {
         console.log(data);
         console.log(data.reply);
