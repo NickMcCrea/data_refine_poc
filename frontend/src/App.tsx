@@ -20,8 +20,8 @@ function App() {
   const [sessionId, setSessionId] = useState<string | null>(null);
 
   const [conversationData, setConversationData] = useState<ConversationData | null>(null);
-  const restClient = new RestClient();
-  const socketClient = new SocketClient('http://localhost:5001');
+  const restClient =  RestClient.getInstance();
+  const socketClient = SocketClient.getInstance('http://localhost:5001');
 
   // Registering endpoints
   restClient.registerEndpoint('submit_query', { url: 'http://localhost:5001/submit_query', method: 'POST' });

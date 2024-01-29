@@ -10,10 +10,20 @@ interface EndpointConfig {
 class RestClient {
   private endpoints: Map<string, EndpointConfig> = new Map();
 
+  private static instance: RestClient;
+
   // Method to register an endpoint
   registerEndpoint(key: string, config: EndpointConfig): void {
     this.endpoints.set(key, config);
   }
+
+  // Singleton implementation
+  static getInstance = () => {
+    if (!RestClient.instance) {
+      RestClient.instance = new RestClient();
+    }
+    return RestClient.instance;
+  };
 
   // Method to make a request to a registered endpoint
   async makeRequest<T>(key: string, requestData?: any, queryParams?: Record<string,any>): Promise<T> {

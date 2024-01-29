@@ -4,11 +4,20 @@ import { EventEmitter } from 'events';
 
 class SocketClient extends EventEmitter {
   private socket!: Socket;
+  private static instance: SocketClient;
 
   constructor(apiUrl: string) {
     super();
     this.connectSocket(apiUrl);
   }
+
+  // Singleton implementation
+  static getInstance = (apiUrl: string) => {
+    if (!SocketClient.instance) {
+      SocketClient.instance = new SocketClient(apiUrl);
+    }
+    return SocketClient.instance;
+  };
 
   private connectSocket = (apiUrl: string) => {
     this.socket = io(apiUrl);
