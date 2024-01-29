@@ -19,12 +19,12 @@
     height: 100vh;
   }
   
-  .header-placeholder {
+  .header {
     grid-area: header;
     background-color: blue;
   }
   
-  .main-panel-placeholder {
+  .mainPanel {
     grid-area: main;
     padding: 20px;
     background-color: white;

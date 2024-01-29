@@ -9,7 +9,7 @@ import { DataRow } from './components/DataRow';
 import RestClient  from './services/RestClient';
 import SocketClient  from './services/SocketClient';
 import ChatInputWithSend from './components/ChatInput/ChatInputWithSend';
-import './App.css';
+import styles from './App.module.css';
 import { ConversationData } from './DataSetConversation';
 
 
@@ -78,13 +78,10 @@ function App() {
 
 
   return (
-    <div className="layout2">
-    <div className="header-placeholder"><Header/></div>
-    <div className="main-panel-placeholder">
-
+    <div className={styles.layout2}>
+    <div className={styles.header}><Header/></div>
+    <div className={styles.mainPanel}>
     <ChatInputWithSend onSubmit={handleSubmit} />
-
-
     </div>
 
     {/* <div className="sidebar-placeholder">Sidebar</div>
