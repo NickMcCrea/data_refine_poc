@@ -10,7 +10,9 @@ import RestClient from './services/RestClient';
 import SocketClient from './services/SocketClient';
 import ChatInputWithSend from './components/ChatInput/ChatInputWithSend';
 import styles from './App.module.css';
-import { ConversationData } from './DataSetConversation';
+import { ConversationData, TestMessage } from './DataSetConversation';
+import AIChatBox from './components/ChatInput/AIChatBox';
+import { Message } from './components/ChatInput/ChatHistory';
 
 
 
@@ -21,14 +23,13 @@ function App() {
   const [conversationData, setConversationData] = useState<ConversationData | null>(null);
   const restClient = RestClient.getInstance();
   const socketClient = SocketClient.getInstance('http://localhost:5001');
-
+  const [messages, setMessages] = useState<Message[]>([]);
   const [layoutState, setLayoutState] = useState<string>('mainLayout');
 
 
   // Registering endpoints
   restClient.registerEndpoint('submit_query', { url: 'http://localhost:5001/submit_query', method: 'POST' });
-
-
+  restClient.registerEndpoint('test', { url: 'http://localhost:5001/test', method: 'POST' });
 
   // Connecting to the socket
   useEffect(() => {
@@ -52,25 +53,26 @@ function App() {
   }, []);
 
   // Function to handle chat input submission
-  const handleSubmit = (inputValue: string) => {
+  const handleSubmit = async (content: string) => {
 
     //createa JSON to send
     const json = {
-      input: inputValue,
+      input: content,
       session_id: sessionId
     };
+
+    setMessages([...messages, { type: 'text', content, timestamp: new Date(), sender: 'You' }]);
 
     //log it
     console.log(json);
 
-    restClient.makeRequest<ConversationData>('submit_query', json)
+    restClient.makeRequest<TestMessage>('test', json)
       .then(data => {
         console.log(data);
-        setConversationData(data);
-
+        console.log(data.reply);
+        setMessages(prevMessages => [...prevMessages, { type: 'text', content: data.reply, timestamp: new Date(), sender: 'Assistant' }]);
       })
       .catch(error => {
-
         console.error(error);
       });
   };
@@ -92,7 +94,7 @@ function App() {
           <div className={styles.mainLayout}>
             <div className={styles.header}><Header /></div>
             <div className={styles.sidebar}>  
-              <ChatInputWithSend onSubmit={handleSubmit} />
+              <AIChatBox messages={messages}  handleSendMessage={handleSubmit} />
             </div>
           </div>
         );

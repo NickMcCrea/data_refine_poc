@@ -14,7 +14,6 @@ socketio = SocketIO(app, cors_allowed_origins="*", logger=False, engineio_logger
 
 logging.getLogger('socketio').setLevel(logging.ERROR)
 logging.getLogger('engineio').setLevel(logging.ERROR)
-# Set Werkzeug log level
 logging.getLogger('werkzeug').setLevel(logging.ERROR)
 
 
@@ -49,26 +48,18 @@ def on_disconnect():
 def home():
     return "Welcome to the Flask App!"
 
-@app.route('/test', methods=['GET'])
+@app.route('/test', methods=['POST'])
 def test_endpoint():
    
-    #return some table data, where it's a list of key value pairs, where key is the column name and value is the value
-    data = [
-        {
-            'id': 1,
-            'name': 'John Doe',
-            'age': 25
-        },
-        {
-            'id': 2,
-            'name': 'Jane Doe',
-            'age': 22
-        }
-    ]
+    data = request.json
+    input_query = data.get('input')
+    session_id = data.get('session_id')
+    print("session id: ", session_id)
 
-    socketio.emit("test", {}, room=session.get("session_id"))
-
-    return jsonify(data)
+    socketio.emit("test received", data, room=session.get("session_id"))
+   
+    #return a json response with an object called reply containing the input query preceded by the string "You said: "
+    return jsonify({"reply": "You said: " + input_query})
 
 @app.route('/submit_query', methods=['POST'])
 def submit_query():

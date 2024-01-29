@@ -22,3 +22,7 @@ export type ConversationData = {
         single_date: string;
     };
 };
+
+export type TestMessage = {
+    reply: string;
+};
